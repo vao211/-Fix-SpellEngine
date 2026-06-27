@@ -60,11 +60,16 @@ public class SpellHostTrinketItem extends TrinketItem {
 
     @Override
     public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        var isOnCooldown = false;
-        if (entity instanceof PlayerEntity player) {
-            isOnCooldown = !player.isCreative() && player.getItemCooldownManager().isCoolingDown(stack.getItem());
+        try {
+            if (entity instanceof PlayerEntity player && !player.isCreative()) {
+                if (player.getItemCooldownManager() != null && player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
+                    return false;
+                }
+            }
+        } catch (Exception ignored) {
+
         }
-        return super.canUnequip(stack, slot, entity) && !isOnCooldown;
+        return super.canUnequip(stack, slot, entity);
     }
 
     @Override

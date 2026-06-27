@@ -8,6 +8,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.spell_engine.compat.container.ContainerCompat;
 import net.spell_engine.internals.container.SpellContainerSource;
+import dev.emi.trinkets.api.event.TrinketUnequipCallback;
+import dev.emi.trinkets.api.event.TrinketDropCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,19 @@ public class TrinketsCompat {
             if (entity instanceof PlayerEntity player) {
                 SpellContainerSource.setDirty(player, spellSourceName);
             }
+        });
+
+        TrinketUnequipCallback.EVENT.register((stack, slot, entity) -> {
+            if (entity instanceof PlayerEntity player) {
+                SpellContainerSource.setDirty(player, spellSourceName);
+            }
+        });
+
+        TrinketDropCallback.EVENT.register((rule, stack, ref, entity) -> {
+            if (entity instanceof PlayerEntity player) {
+                SpellContainerSource.setDirty(player, spellSourceName);
+            }
+            return rule;
         });
 
         TrinketsItemHelper.register();
