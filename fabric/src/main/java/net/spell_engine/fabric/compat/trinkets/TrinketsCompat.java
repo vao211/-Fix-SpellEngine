@@ -90,9 +90,22 @@ public class TrinketsCompat {
         if (component.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        var trinketInventory = component.get().getInventory().get("spell").get("book");
 
-        // Casting to vanilla type to avoid mapping issues for content mod dev environments
-        return ((Inventory)trinketInventory).getStack(0);
+        var spellGroup = component.get().getInventory().get("spell");
+        if (spellGroup == null) return ItemStack.EMPTY;
+
+        var trinketInventory = spellGroup.get("book");
+        if (trinketInventory == null) return ItemStack.EMPTY;
+
+        Inventory inv = (Inventory) trinketInventory;
+
+        for (int i = 0; i < inv.size(); i++) {
+            ItemStack stack = inv.getStack(i);
+            if (!stack.isEmpty()) {
+                return stack;
+            }
+        }
+
+        return ItemStack.EMPTY;
     }
 }
